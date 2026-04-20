@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   base: '/haeseola-homepage/',
-  plugins: 
+  plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
