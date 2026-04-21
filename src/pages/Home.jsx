@@ -2,6 +2,7 @@ import React from 'react';
 import CalendarWidget from '../components/CalendarWidget';
 import MessageFeed from '../components/MessageFeed';
 import YouTubeGallery from '../components/YouTubeGallery';
+import FanMessageForm from '../components/FanMessageForm';
 
 function Home() {
   return (
