@@ -9,23 +9,29 @@ function YouTubeGallery() {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        // 본인 채널 ID
         const channelId = "UCAGeAW20MJMXIXWPNLvr0cQ";
         const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
-        // 차단되지 않는 AllOrigins 프록시 사용 (무료, 무제한)
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
+        
+        // 🚨 수정됨: AllOrigins 대신 corsproxy.io 사용
+        const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(rssUrl)}`;
 
         const res = await fetch(proxyUrl);
-        const data = await res.json();
 
-        if (!data.contents) {
-          throw new Error("유튜브 데이터 없음");
+        if (!res.ok) {
+          throw new Error("네트워크 응답이 실패했습니다.");
         }
+
+        // 🚨 수정됨: JSON이 아닌 원본 XML 텍스트를 바로 가져옴
+        const xmlText = await res.text();
 
         // XML 데이터 파싱
         const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+        const xmlDoc = parser.parseFromString(xmlText, "text/xml");
         const entries = xmlDoc.querySelectorAll("entry");
+
+        if (entries.length === 0) {
+          throw new Error("유튜브 데이터 없음");
+        }
 
         const shortsArr = [];
         const vodsArr = [];
@@ -42,7 +48,7 @@ function YouTubeGallery() {
             ? mediaGroup.getElementsByTagName("media:thumbnail")[0].getAttribute("url") 
             : '';
 
-          // 숏츠 판별 로직 (기존 코드 유지)
+          // 숏츠 판별 로직
           const isShort =
             title.toLowerCase().includes("short") ||
             title.includes("#쇼츠") ||
@@ -63,7 +69,7 @@ function YouTubeGallery() {
         setShorts(shortsArr);
         setVods(vodsArr);
       } catch (err) {
-        console.error(err);
+        console.error("RSS 피드 파싱 에러:", err);
         setError("영상 불러오기 실패");
       } finally {
         setLoading(false);
