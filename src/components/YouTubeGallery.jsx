@@ -9,35 +9,40 @@ function YouTubeGallery() {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+        // 본인 채널 ID
+        const channelId = "UCAGeAW20MJMXIXWPNLvr0cQ";
+        const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+        // 차단되지 않는 AllOrigins 프록시 사용 (무료, 무제한)
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
 
-        if (!API_KEY) {
-          throw new Error("API 키 없음");
-        }
-
-        // channelId → uploads playlistId 변환 (UC → UU)
-        const playlistId = "UUAGeAW20MJMXIXWPNLvr0cQ";
-
-        const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=15&playlistId=${playlistId}&key=${API_KEY}`;
-
-        const res = await fetch(url);
+        const res = await fetch(proxyUrl);
         const data = await res.json();
 
-        if (!data.items) {
+        if (!data.contents) {
           throw new Error("유튜브 데이터 없음");
         }
+
+        // XML 데이터 파싱
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+        const entries = xmlDoc.querySelectorAll("entry");
 
         const shortsArr = [];
         const vodsArr = [];
 
-        data.items.forEach((item) => {
-          const videoId = item.snippet.resourceId.videoId;
-          const title = item.snippet.title;
-          const thumbnail = item.snippet.thumbnails.medium.url;
-          const date = new Date(item.snippet.publishedAt).toLocaleDateString();
+        Array.from(entries).forEach((entry) => {
+          const videoId = entry.querySelector("yt\\:videoId").textContent;
+          const title = entry.querySelector("title").textContent;
+          const date = new Date(entry.querySelector("published").textContent).toLocaleDateString();
           const link = `https://www.youtube.com/watch?v=${videoId}`;
+          
+          // 썸네일 추출
+          const mediaGroup = entry.getElementsByTagName("media:group")[0];
+          const thumbnail = mediaGroup 
+            ? mediaGroup.getElementsByTagName("media:thumbnail")[0].getAttribute("url") 
+            : '';
 
-          // 간단 Shorts 판별 (제목 기준)
+          // 숏츠 판별 로직 (기존 코드 유지)
           const isShort =
             title.toLowerCase().includes("short") ||
             title.includes("#쇼츠") ||
@@ -85,7 +90,7 @@ function YouTubeGallery() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
-      {/* 숏츠 */}
+      {/* 숏츠 영역 */}
       {shorts.length > 0 && (
         <div>
           <h3 style={{ marginBottom: '1rem' }}>
@@ -109,7 +114,7 @@ function YouTubeGallery() {
         </div>
       )}
 
-      {/* VOD */}
+      {/* VOD 영역 */}
       {vods.length > 0 && (
         <div>
           <h3 style={{ marginBottom: '1rem' }}>
