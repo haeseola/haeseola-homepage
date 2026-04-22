@@ -11,14 +11,22 @@ function YouTubeGallery() {
       try {
         const channelId = 'UCAGeAW20MJMXIXWPNLvr0cQ';
         const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
-        const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}&count=20`;
-
+        const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(rssUrl)}`;
+        
         const response = await fetch(proxyUrl);
         if (!response.ok) throw new Error('피드를 불러오는데 실패했습니다.');
-
-        const data = await response.json();
-        if (data.status !== 'ok') throw new Error('피드 오류');
-
+        
+        const text = await response.text();
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(text, 'text/xml');
+        const entries = Array.from(xml.querySelectorAll('entry'));
+        
+        const items = entries.map(entry => ({
+          link: entry.querySelector('link')?.getAttribute('href') || '',
+          title: entry.querySelector('title')?.textContent || '',
+          pubDate: entry.querySelector('published')?.textContent || '',
+        }));
+        
         const checkThumbnail = (videoId) => {
           return new Promise((resolve) => {
             const img = new Image();
@@ -39,7 +47,7 @@ function YouTubeGallery() {
         const fetchedVods = [];
 
         await Promise.all(
-          data.items.map(async (item) => {
+          items.map(async (item) => {
             const videoId = item.link.split('v=')[1];
             const isShort = await checkThumbnail(videoId);
 
