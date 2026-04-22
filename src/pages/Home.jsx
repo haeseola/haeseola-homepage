@@ -44,6 +44,9 @@ function Home() {
               <a href="https://chzzk.naver.com/501e7d7f6c739901b845d7b9320e54b4" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem', backgroundColor: '#00FFA3', color: '#000' }}>
                 ⚡ CHZZK
               </a>
+              <a href="https://discord.gg/DbFk8ajrbu" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem', backgroundColor: '#5865F2' }}>
+                💬 Discord
+              </a>
             </div>
           </div>
         </div>
