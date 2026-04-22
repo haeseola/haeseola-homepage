@@ -9,77 +9,61 @@ function YouTubeGallery() {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const apiKey = import.meta.env.VITE_YOUTUBE_API_KEY;
-        const channelId = import.meta.env.VITE_YOUTUBE_CHANNEL_ID;
-        
-        if (!apiKey || !channelId) {
-          throw new Error('API 키 또는 채널 ID가 설정되지 않았습니다.');
-        }
+        const channelId = 'UCAGeAW20MJMXIXWPNLvr0cQ';
+        const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+        const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}&count=20`;
 
-        // Search API로 최근 15개 비디오 가져오기
-        const response = await fetch(
-          `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet&order=date&maxResults=15&type=video`
-        );
-        
-        if (!response.ok) {
-          throw new Error('YouTube 데이터를 불러오는데 실패했습니다.');
-        }
+        const response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error('피드를 불러오는데 실패했습니다.');
 
         const data = await response.json();
-        
-        if (data.items.length === 0) {
-           setLoading(false);
-           return;
-        }
+        if (data.status !== 'ok') throw new Error('피드 오류');
 
-        const videoIds = data.items.map(item => item.id.videoId).join(',');
-        
-        // videos API를 호출하여 영상 길이(duration) 가져오기
-        const videosResponse = await fetch(
-          `https://www.googleapis.com/youtube/v3/videos?key=${apiKey}&id=${videoIds}&part=contentDetails`
-        );
-        
-        if (!videosResponse.ok) {
-           throw new Error('비디오 상세 정보를 불러오는데 실패했습니다.');
-        }
-        
-        const videosData = await videosResponse.json();
-        const durationMap = {};
-        videosData.items.forEach(v => {
-           durationMap[v.id] = v.contentDetails.duration; // ex: "PT15S", "PT1H2M30S"
-        });
+        const checkThumbnail = (videoId) => {
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+              // 숏츠 썸네일은 120x90이지만 실제로는 검은 여백 포함 320x180
+              // YouTube 숏츠는 hqdefault가 가로형이지만 mqdefault가 세로형
+              // 숏츠 판별: 썸네일 비율이 세로형(높이 > 너비)이면 숏츠
+              const isShort = img.naturalHeight > img.naturalWidth;
+              resolve(isShort);
+            };
+            img.onerror = () => resolve(false);
+            // mqdefault로 확인 (숏츠는 세로형으로 나옴)
+            img.src = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+          });
+        };
 
         const fetchedShorts = [];
         const fetchedVods = [];
 
-        data.items.forEach(item => {
-          const videoId = item.id.videoId;
-          const duration = durationMap[videoId] || '';
-          
-          // PT#H#M#S 형식 파싱 (간단히 M, H가 없고 S가 60 이하인지 체크)
-          // 정규식: M이나 H가 포함되어 있으면 1분 이상
-          const isOverMinute = duration.includes('M') || duration.includes('H');
-          const isShort = !isOverMinute; // 1분 이하면 숏츠로 간주
+        await Promise.all(
+          data.items.map(async (item) => {
+            const videoId = item.link.split('v=')[1];
+            const isShort = await checkThumbnail(videoId);
 
-          const title = item.snippet.title.toLowerCase();
-          const desc = item.snippet.description.toLowerCase();
-          
-          // 해시태그로도 판별
-          const hasShortsTag = title.includes('shorts') || title.includes('쇼츠') || desc.includes('shorts') || desc.includes('쇼츠');
+            const videoData = {
+              id: videoId,
+              title: item.title,
+              thumbnail: isShort
+                ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`
+                : `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+              date: new Date(item.pubDate).toLocaleDateString(),
+              link: item.link
+            };
 
-          const videoData = {
-            id: videoId,
-            title: item.snippet.title,
-            thumbnail: item.snippet.thumbnails.high?.url || item.snippet.thumbnails.medium?.url,
-            date: new Date(item.snippet.publishedAt).toLocaleDateString()
-          };
+            if (isShort) {
+              fetchedShorts.push(videoData);
+            } else {
+              fetchedVods.push(videoData);
+            }
+          })
+        );
 
-          if (isShort || hasShortsTag) {
-            fetchedShorts.push(videoData);
-          } else {
-            fetchedVods.push(videoData);
-          }
-        });
+        // 날짜순 정렬
+        fetchedShorts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        fetchedVods.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         setShorts(fetchedShorts);
         setVods(fetchedVods);
@@ -93,36 +77,20 @@ function YouTubeGallery() {
     fetchVideos();
   }, []);
 
-  if (loading) return <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--color-text-muted)' }}>영상을 불러오는 중입니다...</div>;
-  if (error) return <div style={{ textAlign: 'center', padding: '2rem', color: '#ff6b6b' }}>오류: {error}</div>;
+  if (loading) return <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--color-text-muted)' }}>영상을 불러오는 중...</div>;
+  if (error) return <div style={{ textAlign: 'center', padding: '2rem', color: '#ff6b6b' }}>잠시 후 다시 시도해주세요.</div>;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      
-      {/* Shorts Section */}
       {shorts.length > 0 && (
         <div>
           <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ color: '#FF0000' }}>▶</span> 최신 숏츠
           </h3>
-          <div style={{ 
-            display: 'flex', 
-            overflowX: 'auto', 
-            gap: '1.25rem', 
-            paddingBottom: '1rem',
-            scrollbarWidth: 'none'
-          }}>
+          <div style={{ display: 'flex', overflowX: 'auto', gap: '1.25rem', paddingBottom: '1rem', scrollbarWidth: 'none' }}>
             {shorts.map(short => (
-              <a key={short.id} href={`https://www.youtube.com/watch?v=${short.id}`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
-                <div className="card" style={{
-                  flex: '0 0 auto',
-                  width: '140px',
-                  padding: '0',
-                  overflow: 'hidden',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  flexDirection: 'column'
-                }}>
+              <a key={short.id} href={short.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className="card" style={{ flex: '0 0 auto', width: '140px', padding: '0', overflow: 'hidden', cursor: 'pointer', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ width: '100%', height: '250px', overflow: 'hidden' }}>
                     <img src={short.thumbnail} alt={short.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform var(--transition-normal)' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'} />
                   </div>
@@ -136,7 +104,6 @@ function YouTubeGallery() {
         </div>
       )}
 
-      {/* VODs Section */}
       {vods.length > 0 && (
         <div>
           <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -144,7 +111,7 @@ function YouTubeGallery() {
           </h3>
           <div className="flex-col-gap">
             {vods.map(vod => (
-              <a key={vod.id} href={`https://www.youtube.com/watch?v=${vod.id}`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <a key={vod.id} href={vod.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div className="card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem', cursor: 'pointer' }}>
                   <div className="youtube-thumb-container" style={{ marginBottom: 0 }}>
                     <img src={vod.thumbnail} alt={vod.title} className="youtube-thumb-img" />
@@ -161,7 +128,7 @@ function YouTubeGallery() {
       )}
 
       {shorts.length === 0 && vods.length === 0 && (
-         <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--color-text-muted)' }}>최근 영상이 없습니다.</div>
+        <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--color-text-muted)' }}>최근 영상이 없습니다.</div>
       )}
     </div>
   );
