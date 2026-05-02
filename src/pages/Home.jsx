@@ -25,7 +25,6 @@ function Home() {
           }}
         >
           <div className="hero-image-wrapper" style={{ textAlign: 'center' }}>
-             {/* 💡 경로 수정: /를 지우거나 ./를 추가하세요 */}
              <img src="/haeseola-homepage/코믹스풍.png" alt="해설아 코믹스풍" className="hero-image" style={{
       width: '220px',
       display: 'block',
@@ -37,20 +36,20 @@ function Home() {
             <div className="hero-desc">
               명문S대 · 대기업L사 · 유학파 석사 출신{'\n'}게임부터 역사까지, 하고 싶은 거 다 하는 중!
             </div>
-            <div className="hero-links">
-              <a href="https://www.youtube.com/@haeseola" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem', backgroundColor: '#FF0000' }}>
+            <div className="hero-links" style={{ flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center' }}>
+              <a href="https://www.youtube.com/@haeseola" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.5rem 0.7rem', fontSize: '0.78rem', backgroundColor: '#FF0000' }}>
                 ▶ YouTube
               </a>
-              <a href="https://chzzk.naver.com/501e7d7f6c739901b845d7b9320e54b4" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem', backgroundColor: '#00FFA3', color: '#000' }}>
+              <a href="https://chzzk.naver.com/501e7d7f6c739901b845d7b9320e54b4" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.5rem 0.7rem', fontSize: '0.78rem', backgroundColor: '#00FFA3', color: '#000' }}>
                 ⚡ CHZZK
               </a>
-              <a href="https://discord.gg/DbFk8ajrbu" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem', backgroundColor: '#5865F2' }}>
+              <a href="https://discord.gg/DbFk8ajrbu" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.5rem 0.7rem', fontSize: '0.78rem', backgroundColor: '#5865F2' }}>
                 💬 Discord
               </a>
-              <a href="https://cafe.naver.com/haeseola" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem', backgroundColor: '#03C75A' }}>
+              <a href="https://cafe.naver.com/haeseola" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.5rem 0.7rem', fontSize: '0.78rem', backgroundColor: '#03C75A' }}>
                 ☕ 팬카페
               </a>
-              <a href="https://www.instagram.com/haeseola" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem', backgroundColor: '#E1306C' }}>
+              <a href="https://www.instagram.com/haeseola" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.5rem 0.7rem', fontSize: '0.78rem', backgroundColor: '#E1306C' }}>
                 📷 Instagram
               </a>
             </div>
@@ -60,7 +59,6 @@ function Home() {
 
       {/* About Section */}
       <section className="about-section" style={{ marginTop: '0.5rem' }}>
-        {/* 💡 경로 수정: /를 지웠습니다 */}
         <img src="/haeseola-homepage/모에1.png" alt="해설아 모에1" className="about-image" />
         <div className="about-text-content">
           <div className="about-desc">
@@ -81,9 +79,13 @@ function Home() {
       </section>
 
       <section>
-        {/* 💡 "설아" 보다는 전체 이름인 "해설아"로 통일하는 것이 브랜딩에 더 좋을 것 같아요! */}
         <h2 className="section-title">💘해설아가 온님에게💘</h2>
         <MessageFeed />
+      </section>
+
+      <section>
+        <h2 className="section-title">해설아 유튜브</h2>
+        <YouTubeGallery />
       </section>
 
       <section>
@@ -91,12 +93,6 @@ function Home() {
         <FanMessageForm />
       </section>
 
-
-      
-      <section>
-        <h2 className="section-title">해설아 유튜브</h2>
-        <YouTubeGallery />
-      </section>
     </div>
   );
 }
