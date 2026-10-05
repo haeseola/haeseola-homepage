@@ -2,6 +2,8 @@ import React from 'react';
 import CalendarWidget from '../components/CalendarWidget';
 import MessageFeed from '../components/MessageFeed';
 import YouTubeGallery from '../components/YouTubeGallery';
+import IdentitySection from '../components/IdentitySection';
+import HeroSlider from '../components/HeroSlider';
 import FanMessageForm from '../components/FanMessageForm';
 
 function Home() {
@@ -24,33 +26,22 @@ function Home() {
           paddingTop: '0'
           }}
         >
-          <div className="hero-image-wrapper" style={{ textAlign: 'center' }}>
-             <img src="/haeseola-homepage/코믹스풍.png" alt="해설아 코믹스풍" className="hero-image" style={{
-      width: '220px',
-      display: 'block',
-      margin: '0 auto'}}/>
-          </div>
+          <HeroSlider />
           <div className="hero-text">
             <h1 className="hero-title">💘해설아💘</h1>
             <div className="hero-subtitle">해설하는 사람</div>
             <div className="hero-desc">
               명문S대 · 대기업L사 · 유학파 석사 출신{'\n'}게임부터 역사까지, 하고 싶은 거 다 하는 중!
             </div>
-            <div className="hero-links" style={{ flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center' }}>
-              <a href="https://www.youtube.com/@haeseola" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.5rem 0.7rem', fontSize: '0.78rem', backgroundColor: '#FF0000' }}>
+            <div className="hero-links">
+              <a href="https://www.youtube.com/@haeseola" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem', backgroundColor: '#FF0000' }}>
                 ▶ YouTube
               </a>
-              <a href="https://chzzk.naver.com/501e7d7f6c739901b845d7b9320e54b4" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.5rem 0.7rem', fontSize: '0.78rem', backgroundColor: '#00FFA3', color: '#000' }}>
+              <a href="https://chzzk.naver.com/501e7d7f6c739901b845d7b9320e54b4" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem', backgroundColor: '#00FFA3', color: '#000' }}>
                 ⚡ CHZZK
               </a>
-              <a href="https://discord.gg/KGqz4c9XZF" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.5rem 0.7rem', fontSize: '0.78rem', backgroundColor: '#5865F2' }}>
+              <a href="https://discord.gg/DbFk8ajrbu" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem', backgroundColor: '#5865F2' }}>
                 💬 Discord
-              </a>
-              <a href="https://cafe.naver.com/haeseola" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.5rem 0.7rem', fontSize: '0.78rem', backgroundColor: '#03C75A' }}>
-                ☕ 팬카페
-              </a>
-              <a href="https://www.instagram.com/haeseola" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.5rem 0.7rem', fontSize: '0.78rem', backgroundColor: '#E1306C' }}>
-                📷 Instagram
               </a>
             </div>
           </div>
@@ -59,7 +50,7 @@ function Home() {
 
       {/* About Section */}
       <section className="about-section" style={{ marginTop: '0.5rem' }}>
-        <img src="/haeseola-homepage/모에1.png" alt="해설아 모에1" className="about-image" />
+        <img src="/haeseola-homepage/모에1.gif" alt="해설아 모에1" className="about-image" />
         <div className="about-text-content">
           <div className="about-desc">
             안녕하세요! 해설아입니다👋{'\n'}종합 게임 & 저챗 유튜버입니다. {'\n'} 오버워치와 스타크래프트부터 {'\n'}  여행 썰방, 역사 탐구까지 합니다! {'\n'}(팬 애칭: 온님 / 오누이)
@@ -73,6 +64,8 @@ function Home() {
         </div>
       </section>
 
+      <IdentitySection />
+
       <section>
         <h2 className="section-title">주간 방송 일정</h2>
         <CalendarWidget />
@@ -84,15 +77,14 @@ function Home() {
       </section>
 
       <section>
-        <h2 className="section-title">해설아 유튜브</h2>
-        <YouTubeGallery />
-      </section>
-
-      <section>
         <h2 className="section-title">💌 설아에게 메시지 보내기</h2>
         <FanMessageForm />
       </section>
 
+      <section>
+        <h2 className="section-title">해설아 유튜브</h2>
+        <YouTubeGallery />
+      </section>
     </div>
   );
 }
