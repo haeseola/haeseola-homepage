@@ -48,12 +48,12 @@ function Home() {
         </div>
       </section>
 
-      <IdentitySection />
-
       <section>
         <h2 className="section-title">주간 방송 일정</h2>
         <CalendarWidget />
       </section>
+
+      <IdentitySection />
 
       <section>
         <h2 className="section-title">💘해설아가 온님에게💘</h2>
