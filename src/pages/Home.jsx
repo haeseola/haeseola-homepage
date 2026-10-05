@@ -48,22 +48,6 @@ function Home() {
         </div>
       </section>
 
-      {/* About Section */}
-      <section className="about-section" style={{ marginTop: '0.5rem' }}>
-        <img src="/haeseola-homepage/모에1.gif" alt="해설아 모에1" className="about-image" />
-        <div className="about-text-content">
-          <div className="about-desc">
-            안녕하세요! 해설아입니다👋{'\n'}종합 게임 & 저챗 유튜버입니다. {'\n'} 오버워치와 스타크래프트부터 {'\n'}  여행 썰방, 역사 탐구까지 합니다! {'\n'}(팬 애칭: 온님 / 오누이)
-          </div>
-          <div className="about-tags">
-            <span className="tag">#게임</span>
-            <span className="tag">#여행</span>
-            <span className="tag">#지식</span>
-            <span className="tag">#버튜버</span>
-          </div>
-        </div>
-      </section>
-
       <IdentitySection />
 
       <section>
