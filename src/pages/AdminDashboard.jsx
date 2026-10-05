@@ -190,7 +190,7 @@ function AdminDashboard() {
         <form onSubmit={handleSendNotification} style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
           <input type="text" placeholder="알림 제목 (예: 방송 켰습니다!)" value={notiTitle} onChange={e => setNotiTitle(e.target.value)} className="input-base" required />
           <textarea placeholder="알림 내용 (예: 지금 바로 보러오세요!)" value={notiBody} onChange={e => setNotiBody(e.target.value)} className="input-base" style={{ minHeight: '80px', resize: 'vertical' }} required />
-          <button type="submit" className="btn" style={{ backgroundColor: 'var(--color-gold)', color: '#2A2A2E', marginTop: '0.5rem' }}>전체 알림 발송</button>
+          <button type="submit" className="btn" style={{ backgroundColor: 'var(--color-pink)', color: '#2A2A2E', marginTop: '0.5rem' }}>전체 알림 발송</button>
         </form>
       </section>
 
