@@ -45,9 +45,9 @@ const FanMessageForm = () => {
           required
         />
         <textarea
-          placeholder="해설아님에게 메시지를 남겨보세요! (최대 200자)"
+          placeholder="해설아님에게 메시지를 남겨보세요! (최대 500자)"
           value={message}
-          onChange={(e) => setMessage(e.target.value.slice(0, 200))}
+          onChange={(e) => setMessage(e.target.value.slice(0, 500))}
           className="form-textarea"
           required
         />
