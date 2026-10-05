@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 const IMAGES = [
-  '코믹스풍.png',
   '1.jpg',
   '2.png',
   '3.png',
