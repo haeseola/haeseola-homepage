@@ -57,7 +57,7 @@ function Layout() {
     <div className="layout">
       <canvas ref={canvasRef} className="global-canvas"></canvas>
       <div className="global-light-purple"></div>
-      <div className="global-light-gold"></div>
+      <div className="global-light-pink"></div>
 
       <header className="header-glass">
         <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '480px', margin: '0 auto', padding: '1.2rem 1.5rem' }}>
