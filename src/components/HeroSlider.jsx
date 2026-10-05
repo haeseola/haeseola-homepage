@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 const IMAGES = [
   '코믹스풍.png',
-  'hero/1.png',
-  'hero/2.png',
-  'hero/3.png',
-  'hero/4.png',
-  'hero/5.png',
-  'hero/6.png'
+  '1.jpg',
+  '2.png',
+  '3.png',
+  '4.png',
+  '5.png',
+  '6.png'
 ];
 
 function HeroSlider() {
