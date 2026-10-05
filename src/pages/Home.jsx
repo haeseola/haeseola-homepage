@@ -31,7 +31,7 @@ function Home() {
             <h1 className="hero-title">💘해설아💘</h1>
             <div className="hero-subtitle">해설하는 사람</div>
             <div className="hero-desc">
-              명문S대 · 대기업L사 · 유학파 석사 출신{'\n'}게임부터 역사까지, 하고 싶은 거 다 하는 중!
+              명문S대 · 대기업L사 · 영미권 석사 출신{'\n'}게임부터 역사까지, 하고 싶은 거 다 하는 중!
             </div>
             <div className="hero-links">
               <a href="https://www.youtube.com/@haeseola" target="_blank" rel="noreferrer" className="btn btn-primary" style={{ padding: '0.6rem 1rem', fontSize: '0.85rem', backgroundColor: '#FF0000' }}>
